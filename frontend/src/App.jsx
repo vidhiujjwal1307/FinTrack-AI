@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import BudgetCards from "./components/BudgetCards";
 import {
   PieChart,
   Pie,
@@ -219,17 +220,12 @@ const highestCategoryPercentage =
       <hr />
       <h2>Budget Overview</h2>
 
-<p>
-  Budget: ₹{budget || 0}
-</p>
-
-<p>
-  Spent: ₹{totalAmount}
-</p>
-
-<p>
-  Remaining: ₹{remainingBudget}
-</p>
+<BudgetCards
+  budget={budget}
+  totalExpenses={totalAmount}
+  remainingBudget={remainingBudget}
+  budgetUsedPercentage={budgetUsedPercentage}
+/>
 {remainingBudget < 0 && (
   <h3 style={{ color: "red" }}>
     ⚠ Budget Exceeded by ₹

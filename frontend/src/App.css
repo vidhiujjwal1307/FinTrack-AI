@@ -182,3 +182,19 @@
     border-right-color: var(--border);
   }
 }
+.card {
+  background: #1b1f2a;
+  border: 1px solid #2d3748;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.card h4 {
+  color: #b0b0b0;
+}
+
+.card h2 {
+  color: white;
+}
