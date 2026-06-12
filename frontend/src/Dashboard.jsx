@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import axios from "axios";
 import {
   Add,
   AutoAwesome,
@@ -17,7 +18,9 @@ import {
   NotificationsNone,
   Payments,
   QueryStats,
+  Receipt,
   ReceiptLong,
+  Refresh,
   Savings,
   Search,
   Settings,
@@ -91,6 +94,9 @@ const categoryColors = {
   Transport: "#f59e0b",
   Utilities: "#8b5cf6",
   Dining: "#ef4444",
+  dining: "#ef4444",
+  Food: "#10b981",
+  Travel: "#ec4899",
   Shopping: "#06b6d4",
   Other: "#64748b",
 };
@@ -138,12 +144,23 @@ const emptyForm = {
 };
 
 function Dashboard() {
-  const [transactions, setTransactions] = useState(initialTransactions);
-  const [budget, setBudget] = useState(50000);
-  const [budgetDraft, setBudgetDraft] = useState("50000");
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
+  const [budget, setBudget] = useState(() => {
+    const saved = localStorage.getItem("fintrack_budget");
+    return saved ? Number(saved) : 50000;
+  });
+  const [budgetDraft, setBudgetDraft] = useState(() => {
+    const saved = localStorage.getItem("fintrack_budget");
+    return saved ? String(saved) : "50000";
+  });
   const [isBudgetEditing, setIsBudgetEditing] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
-  const [theme, setTheme] = useState("default");
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem("fintrack_theme");
+    return saved || "default";
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [expenseForm, setExpenseForm] = useState(emptyForm);
@@ -151,6 +168,55 @@ function Dashboard() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [activeSection, setActiveSection] = useState("Dashboard");
+
+  const showMessage = (text) => {
+    setMessage(text);
+    window.setTimeout(() => setMessage(""), 2800);
+  };
+
+  // Save budget to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("fintrack_budget", String(budget));
+  }, [budget]);
+
+  // Save theme to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("fintrack_theme", theme);
+  }, [theme]);
+
+  // Fetch expenses from backend
+  const fetchExpensesFromBackend = async () => {
+    try {
+      setLoading(true);
+      setLoadError(null);
+      console.log("Fetching expenses from backend...");
+      const response = await axios.get("http://127.0.0.1:8000/expenses");
+      console.log("Backend response:", response.data);
+      
+      if (response.data && Array.isArray(response.data)) {
+        console.log("Setting transactions:", response.data);
+        setTransactions(response.data);
+        setLoadError(null);
+        console.log("Total expenses loaded:", response.data.length);
+      } else {
+        console.warn("Response data is not an array:", response.data);
+        setLoadError("Invalid data format from server");
+      }
+    } catch (error) {
+      console.error("Error fetching expenses:", error);
+      console.error("Error message:", error.message);
+      console.error("Error response:", error.response?.data);
+      setLoadError("Failed to load expenses: " + (error.message || "Unknown error"));
+      setTransactions([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch expenses from backend on component mount
+  useEffect(() => {
+    fetchExpensesFromBackend();
+  }, []);
 
   const monthlyTransactions = transactions.filter((transaction) =>
     transaction.date.startsWith(selectedMonth)
@@ -225,11 +291,6 @@ function Dashboard() {
     },
   ];
 
-  const showMessage = (text) => {
-    setMessage(text);
-    window.setTimeout(() => setMessage(""), 2800);
-  };
-
   const scrollToSection = (item) => {
     setActiveSection(item.label);
     document.getElementById(item.target)?.scrollIntoView({
@@ -272,7 +333,7 @@ function Dashboard() {
     }));
   };
 
-  const saveExpense = (event) => {
+  const saveExpense = async (event) => {
     event.preventDefault();
 
     const amountNumber = Number(expenseForm.amount);
@@ -281,44 +342,80 @@ function Dashboard() {
       return;
     }
 
-    if (editingId) {
-      setTransactions((currentTransactions) =>
-        currentTransactions.map((transaction) =>
-          transaction.id === editingId
-            ? {
-                ...transaction,
-                title: expenseForm.title.trim(),
-                amount: amountNumber,
-                category: expenseForm.category,
-        date: expenseForm.date || `${selectedMonth}-01`,
-              }
-            : transaction
-        )
-      );
-      closeModal();
-      showMessage("Expense updated successfully.");
+    if (!expenseForm.date) {
+      showMessage("Please select a date.");
       return;
     }
 
-    setTransactions((currentTransactions) => [
-      {
-        id: Date.now(),
-        title: expenseForm.title.trim(),
-        amount: amountNumber,
-        category: expenseForm.category,
-        date: expenseForm.date || `${selectedMonth}-01`,
-      },
-      ...currentTransactions,
-    ]);
-    closeModal();
-    showMessage("Your expense has been added.");
+    const expenseData = {
+      title: expenseForm.title.trim(),
+      amount: amountNumber,
+      category: expenseForm.category,
+      date: expenseForm.date,
+    };
+
+    try {
+      if (editingId) {
+        // Update existing expense
+        const response = await axios.put(
+          `http://127.0.0.1:8000/expenses/${editingId}`,
+          expenseData
+        );
+
+        if (response.data.error) {
+          showMessage("Error updating expense: " + response.data.error);
+          return;
+        }
+
+        // Refetch all expenses to ensure data consistency
+        await fetchExpensesFromBackend();
+        closeModal();
+        showMessage("Expense updated successfully.");
+      } else {
+        // Create new expense
+        const response = await axios.post(
+          "http://127.0.0.1:8000/expenses",
+          expenseData
+        );
+
+        if (response.data.error) {
+          showMessage("Error adding expense: " + response.data.error);
+          return;
+        }
+
+        // Refetch all expenses from server to ensure consistency
+        await fetchExpensesFromBackend();
+        closeModal();
+        showMessage("Your expense has been added.");
+      }
+    } catch (error) {
+      console.error("Error saving expense:", error);
+      showMessage(
+        "Error saving expense: " +
+          (error.response?.data?.error || error.message || "Unknown error")
+      );
+    }
   };
 
-  const deleteExpense = (id) => {
-    setTransactions((currentTransactions) =>
-      currentTransactions.filter((transaction) => transaction.id !== id)
-    );
-    showMessage("Expense deleted successfully.");
+  const deleteExpense = async (id) => {
+    try {
+      const response = await axios.delete(`http://127.0.0.1:8000/expenses/${id}`);
+
+      if (response.data.error) {
+        showMessage("Error deleting expense: " + response.data.error);
+        return;
+      }
+
+      // Refetch all expenses to ensure data consistency
+      await fetchExpensesFromBackend();
+      showMessage("Expense deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting expense:", error);
+      showMessage(
+        "Error deleting expense: " +
+          (error.response?.data?.error || error.message || "Unknown error")
+      );
+    }
   };
 
   const saveBudget = (event) => {
@@ -370,7 +467,7 @@ function Dashboard() {
         <div>
           <div className="brand">
             <h1>FinTrack AI</h1>
-            <p>Precision Finance</p>
+            <p>Smart Finance Expense Tracker</p>
           </div>
 
           <nav className="nav-list" aria-label="Primary navigation">
@@ -415,6 +512,19 @@ function Dashboard() {
 
           <div className="top-actions">
             <button
+              className="icon-button"
+              type="button"
+              aria-label="Refresh data"
+              title="Refresh expenses from server"
+              onClick={() => {
+                fetchExpensesFromBackend();
+                showMessage("Refreshing data from server...");
+              }}
+              disabled={loading}
+            >
+              <Refresh />
+            </button>
+            <button
               className="icon-button has-alert"
               type="button"
               aria-label="Notifications"
@@ -440,6 +550,18 @@ function Dashboard() {
             </button>
           </div>
         </header>
+
+        {loadError && (
+          <div style={{
+            padding: "12px 20px",
+            backgroundColor: "#fee2e2",
+            borderBottom: "1px solid #fecaca",
+            color: "#991b1b",
+            fontSize: "14px"
+          }}>
+            ⚠️ {loadError}
+          </div>
+        )}
 
         <main className="dashboard-content">
           <section className="page-heading" id="dashboard">
@@ -805,16 +927,18 @@ function Dashboard() {
                 <button
                   className="secondary-button reset-button"
                   type="button"
-                  onClick={() => {
-                    setTransactions(initialTransactions);
-                    setBudget(50000);
-                    setBudgetDraft("50000");
-                    setSelectedMonth(currentMonth);
-                    setTheme("default");
-                    showMessage("Demo data restored.");
+                  onClick={async () => {
+                    try {
+                      await fetchExpensesFromBackend();
+                      setSelectedMonth(currentMonth);
+                      showMessage("Expenses refreshed from server.");
+                    } catch (error) {
+                      console.error("Error refreshing data:", error);
+                      showMessage("Error refreshing data.");
+                    }
                   }}
                 >
-                  Reset Demo Data
+                  Refresh Server Data
                 </button>
               </div>
             </div>

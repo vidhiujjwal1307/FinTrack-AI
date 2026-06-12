@@ -24,7 +24,14 @@ function App() {
 
   const [budget, setBudget] = useState(localStorage.getItem("budget") || "");
 
-  const [expenses, setExpenses] = useState([]);
+  const [expenses, setExpenses] = useState(() => {
+    try {
+      const raw = localStorage.getItem("expenses");
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  });
   const COLORS = [
   "#0088FE",
   "#00C49F",
@@ -40,8 +47,23 @@ function App() {
       );
 
       setExpenses(response.data);
+      try {
+        localStorage.setItem(
+          "expenses",
+          JSON.stringify(response.data)
+        );
+      } catch (e) {
+        console.log("Could not save expenses to localStorage", e);
+      }
     } catch (error) {
       console.log(error);
+      // If backend is unavailable, keep using localStorage data
+      try {
+        const raw = localStorage.getItem("expenses");
+        if (raw) setExpenses(JSON.parse(raw));
+      } catch (e) {
+        console.log("Failed to load expenses from localStorage", e);
+      }
     }
   };
 
@@ -92,6 +114,46 @@ function App() {
 
   } catch (error) {
     console.log(error);
+    // Fallback: if backend is unreachable, persist change locally
+    try {
+      if (editingId !== null) {
+        const updated = expenses.map((e) =>
+          e.id === editingId
+            ? {
+                ...e,
+                title,
+                amount: parseFloat(amount),
+                category,
+                date,
+              }
+            : e
+        );
+        setExpenses(updated);
+        localStorage.setItem("expenses", JSON.stringify(updated));
+        setEditingId(null);
+        alert("Expense updated locally (offline)");
+      } else {
+        // Create a local id using timestamp
+        const newExpense = {
+          id: Date.now(),
+          title,
+          amount: parseFloat(amount),
+          category,
+          date,
+        };
+        const updated = [...expenses, newExpense];
+        setExpenses(updated);
+        localStorage.setItem("expenses", JSON.stringify(updated));
+        alert("Expense saved locally (offline)");
+      }
+
+      setTitle("");
+      setAmount("");
+      setCategory("");
+      setDate("");
+    } catch (e) {
+      console.log("Failed to persist expense locally", e);
+    }
   }
 };
 
@@ -108,6 +170,14 @@ function App() {
       fetchExpenses();
     } catch (error) {
       console.log(error);
+      // Fallback: remove locally if backend not reachable
+      try {
+        const updated = expenses.filter((e) => e.id !== id);
+        setExpenses(updated);
+        localStorage.setItem("expenses", JSON.stringify(updated));
+      } catch (e) {
+        console.log("Failed to update local expenses", e);
+      }
     }
   };
   const chartData = [];
