@@ -1,4 +1,6 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "./context/AuthContext";
 import axios from "axios";
 import {
   Add,
@@ -144,6 +146,8 @@ const emptyForm = {
 };
 
 function Dashboard() {
+  const navigate = useNavigate();
+  const { user, logout } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
@@ -168,6 +172,11 @@ function Dashboard() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [activeSection, setActiveSection] = useState("Dashboard");
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const showMessage = (text) => {
     setMessage(text);
