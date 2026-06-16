@@ -199,7 +199,7 @@ function Dashboard() {
       setLoading(true);
       setLoadError(null);
       console.log("Fetching expenses from backend...");
-      const response = await axios.get("http://127.0.0.1:8000/expenses");
+      const response = await axios.get("https://fintrack-ai-yaih.onrender.com/expenses");
       console.log("Backend response:", response.data);
       
       if (response.data && Array.isArray(response.data)) {
@@ -367,7 +367,7 @@ function Dashboard() {
       if (editingId) {
         // Update existing expense
         const response = await axios.put(
-          `http://127.0.0.1:8000/expenses/${editingId}`,
+          `https://fintrack-ai-yaih.onrender.com/expenses/${editingId}`,
           expenseData
         );
 
@@ -383,7 +383,7 @@ function Dashboard() {
       } else {
         // Create new expense
         const response = await axios.post(
-          "http://127.0.0.1:8000/expenses",
+          "https://fintrack-ai-yaih.onrender.com/expenses",
           expenseData
         );
 
@@ -408,7 +408,7 @@ function Dashboard() {
 
   const deleteExpense = async (id) => {
     try {
-      const response = await axios.delete(`http://127.0.0.1:8000/expenses/${id}`);
+      const response = await axios.delete(`https://fintrack-ai-yaih.onrender.com/expenses/${id}`);
 
       if (response.data.error) {
         showMessage("Error deleting expense: " + response.data.error);
