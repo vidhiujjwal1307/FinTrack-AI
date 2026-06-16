@@ -47,7 +47,7 @@ button {
 }
 
 .theme-lavender {
-  --green: #7c3aed;
+  --green: #a23aed;
   --panel: #ffffff;
   --line: #ddd6fe;
 }
@@ -55,7 +55,7 @@ button {
 .theme-lavender,
 .theme-lavender .sidebar,
 .theme-lavender .topbar {
-  background: #f7f3ff;
+  background: #fbf3ff;
 }
 
 .theme-sunset {
@@ -1304,6 +1304,20 @@ button {
     display: none;
   }
 }
+.logout-btn {
+  border: none;
+  background: #ef4444;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 9px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.logout-btn:hover {
+  background: #dc2626;
+}
 
 @media (max-width: 560px) {
   .brand h1 {
@@ -1339,4 +1353,34 @@ button {
     top: 20px;
     text-align: center;
   }
+}
+.profile-page {
+  min-height: 100vh;
+  background: #f5f7fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-card {
+  width: 420px;
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 20px;
 }

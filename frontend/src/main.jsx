@@ -5,6 +5,7 @@ import { AuthProvider } from "./context/AuthContext";
 import Dashboard from "./Dashboard";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Profile from "./Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./index.css";
 
@@ -23,6 +24,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               </ProtectedRoute>
             }
           />
+          <Route
+  path="/profile"
+  element={
+    <ProtectedRoute>
+      <Profile />
+    </ProtectedRoute>
+  }
+/>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </AuthProvider>

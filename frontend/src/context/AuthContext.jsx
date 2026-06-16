@@ -70,12 +70,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('fintrack_token');
-    localStorage.removeItem('fintrack_user');
-    delete axios.defaults.headers.common['Authorization'];
-  };
+  localStorage.removeItem("fintrack_token");
+  localStorage.removeItem("fintrack_user");
+
+  delete axios.defaults.headers.common["Authorization"];
+
+  setUser(null);
+  setToken(null);
+};
 
   return (
     <AuthContext.Provider value={{ user, token, loading, login, signup, logout }}>

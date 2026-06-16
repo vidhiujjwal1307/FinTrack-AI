@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import BudgetCards from "./components/BudgetCards";
+import Profile from "./Profile";
 import {
   PieChart,
   Pie,

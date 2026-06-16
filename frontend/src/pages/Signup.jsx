@@ -55,75 +55,79 @@ export default function Signup() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1 className="auth-title">Smart Finance</h1>
-        <p className="auth-subtitle">Create Account</p>
+  <div className="auth-container">
+    <div className="auth-card">
+      <div className="auth-logo">AI</div>
 
-        {error && <div className="error-message">{error}</div>}
+      <h1 className="auth-title">FinTrack AI</h1>
+      <p className="auth-subtitle">
+        Smart Finance Expense Tracker
+      </p>
 
-        <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              disabled={loading}
-            />
-          </div>
+      {error && <div className="error-message">{error}</div>}
 
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="Choose a username"
-              disabled={loading}
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="auth-form">
+        <div className="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Enter your email"
+            disabled={loading}
+          />
+        </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter password"
-              disabled={loading}
-            />
-          </div>
+        <div className="form-group">
+          <label>Username</label>
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            placeholder="Choose a username"
+            disabled={loading}
+          />
+        </div>
 
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirm password"
-              disabled={loading}
-            />
-          </div>
+        <div className="form-group">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Enter password"
+            disabled={loading}
+          />
+        </div>
 
-          <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? 'Creating Account...' : 'Sign Up'}
-          </button>
-        </form>
+        <div className="form-group">
+          <label>Confirm Password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            placeholder="Confirm password"
+            disabled={loading}
+          />
+        </div>
 
-        <p className="auth-link">
-          Already have an account? <a href="/login">Login</a>
-        </p>
-      </div>
+        <button
+          type="submit"
+          className="auth-button"
+          disabled={loading}
+        >
+          {loading ? "Creating Account..." : "Sign Up"}
+        </button>
+      </form>
+
+      <p className="auth-link">
+        Already have an account? <a href="/login">Login</a>
+      </p>
     </div>
-  );
+  </div>
+);
 }

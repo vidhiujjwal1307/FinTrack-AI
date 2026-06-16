@@ -550,13 +550,21 @@ function Dashboard() {
               <Help />
             </button>
             <button
-              className="avatar"
-              type="button"
-              aria-label="User profile"
-              onClick={() => showMessage("Profile page coming soon.")}
-            >
-              AI
-            </button>
+  className="avatar"
+  type="button"
+  aria-label="User profile"
+  onClick={() => navigate("/profile")}
+>
+  {user?.username?.charAt(0)?.toUpperCase() || "U"}
+</button>
+
+<button
+  className="logout-btn"
+  type="button"
+  onClick={handleLogout}
+>
+  Logout
+</button>
           </div>
         </header>
 
