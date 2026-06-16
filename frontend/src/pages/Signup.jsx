@@ -48,11 +48,12 @@ export default function Signup() {
     setLoading(false);
 
     if (result.success) {
-      navigate('/dashboard');
-    } else {
-      setError(result.error);
-    }
-  };
+  alert("Account created successfully. Please login.");
+  navigate('/login');
+} else {
+  setError(result.error);
+}
+};
 
   return (
   <div className="auth-container">
