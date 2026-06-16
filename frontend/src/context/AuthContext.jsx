@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (email, username, password) => {
   try {
-    await axios.post('http://localhost:8000/auth/signup', {
+    await axios.post('https://fintrack-ai-yaih.onrender.com/auth/signup', {
       email,
       username,
       password
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('http://localhost:8000/auth/login', {
+      const response = await axios.post('https://fintrack-ai-yaih.onrender.com/auth/login', {
         email,
         password
       });
