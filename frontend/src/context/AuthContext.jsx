@@ -25,27 +25,24 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const signup = async (email, username, password) => {
-    try {
-      const response = await axios.post('http://localhost:8000/auth/signup', {
-        email,
-        username,
-        password
-      });
+  try {
+    await axios.post('http://localhost:8000/auth/signup', {
+      email,
+      username,
+      password
+    });
 
-      const { access_token, user: userData } = response.data;
-      
-      setToken(access_token);
-      setUser(userData);
-      localStorage.setItem('fintrack_token', access_token);
-      localStorage.setItem('fintrack_user', JSON.stringify(userData));
-      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+    return { success: true };
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || 'Signup failed';
 
-      return { success: true };
-    } catch (error) {
-      const errorMessage = error.response?.data?.detail || 'Signup failed';
-      return { success: false, error: errorMessage };
-    }
-  };
+    return {
+      success: false,
+      error: errorMessage
+    };
+  }
+};
 
   const login = async (email, password) => {
     try {

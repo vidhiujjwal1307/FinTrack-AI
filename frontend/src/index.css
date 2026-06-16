@@ -1366,21 +1366,63 @@ button {
   width: 420px;
   background: white;
   padding: 40px;
-  border-radius: 16px;
+  border-radius: 20px;
   text-align: center;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
 .profile-avatar {
   width: 90px;
   height: 90px;
+  margin: 0 auto 25px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  background: linear-gradient(135deg,#1e3a8a,#2563eb);
   color: white;
   font-size: 32px;
-  font-weight: bold;
+  font-weight: 700;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin: 0 auto 20px;
+  justify-content: center;
+}
+
+.profile-name {
+  margin-bottom: 30px;
+  color: #0f172a;
+}
+
+.profile-details {
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.profile-field {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.profile-field label {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-field span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.back-btn {
+  width: 100%;
+  border: none;
+  background: #2563eb;
+  color: white;
+  padding: 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
 }

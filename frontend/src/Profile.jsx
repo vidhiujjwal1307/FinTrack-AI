@@ -9,18 +9,34 @@ function Profile() {
   return (
     <div className="profile-page">
       <div className="profile-card">
-        <div className="profile-avatar">
-          {user?.username?.charAt(0)?.toUpperCase() || "U"}
-        </div>
+  <div className="profile-avatar">
+    {user?.username?.charAt(0)?.toUpperCase() || "U"}
+  </div>
 
-        <h2>{user?.username}</h2>
-        <p>{user?.email}</p>
+  <h2 className="profile-name">
+    {user?.username}
+  </h2>
 
-        <button
-          className="secondary-button"
-          onClick={() => navigate("/dashboard")}
-        >
-          Back to Dashboard
+  <div className="profile-details">
+
+    <div className="profile-field">
+      <label>Username: </label>
+      <span>{user?.username}</span>
+    </div>
+
+    <div className="profile-field">
+      <label>Email: </label>
+      <span>{user?.email}</span>
+    </div>
+
+  </div>
+
+  <button
+    className="back-btn"
+    onClick={() => navigate("/dashboard")}
+  >
+    Back to Dashboard
+ 
         </button>
       </div>
     </div>
