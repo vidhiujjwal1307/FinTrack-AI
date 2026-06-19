@@ -1,5 +1,7 @@
 # FinTrack AI
 
+[![Live Demo](https://img.shields.io/badge/Live-Demo-green)](https://fintrack-ai-1-aifa.onrender.com)
+
 🚀 Live Demo: https://fintrack-ai-1-aifa.onrender.com
 
 📖 Backend API Docs: https://fintrack-ai-yaih.onrender.com/docs
