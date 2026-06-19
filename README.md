@@ -40,7 +40,7 @@ FinTrack AI is a modern web-based personal finance management application design
 
 The platform enables users to organize financial data, monitor spending trends, visualize expenses through interactive charts, and maintain better control over personal finances through a simple and intuitive interface.
 
-Built using React, FastAPI, SQLite, and modern visualization libraries, FinTrack AI delivers a seamless experience for both casual users and individuals focused on financial planning.
+Built using React, FastAPI, PostgreSQL , and modern visualization libraries, FinTrack AI delivers a seamless experience for both casual users and individuals focused on financial planning.
 
 ---
 
@@ -243,7 +243,7 @@ Visual Dashboard Updates
 
 * FastAPI
 * SQLAlchemy
-* SQLite
+* PostgreSQL
 * JWT Authentication
 * bcrypt
 
@@ -284,7 +284,7 @@ pip --version
 ## Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/FinTrack-AI.git
+git clone https://github.com/vidhiujjwal1307/FinTrack-AI.git
 
 cd FinTrack-AI
 ```
@@ -543,6 +543,8 @@ This project is licensed under the MIT License.
 
 # Support & Feedback
 
+If you like this project, please give it a ⭐ on GitHub.
+
 For issues, feature requests, or improvements:
 
 * Create a GitHub Issue
@@ -553,3 +555,5 @@ For issues, feature requests, or improvements:
 
 **Last Updated:** June 2026
 **Version:** 1.0
+
+Built with ❤️ by Vidhi Ujjwal
