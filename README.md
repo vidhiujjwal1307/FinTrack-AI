@@ -1,5 +1,37 @@
 # FinTrack AI
 
+🚀 Live Demo: https://fintrack-ai-1-aifa.onrender.com
+
+📖 Backend API Docs: https://fintrack-ai-yaih.onrender.com/docs
+
+## Features
+
+- User Authentication (Login/Signup)
+- Expense Tracking
+- Budget Management
+- Expense Analytics
+- Profile Management
+- Responsive UI
+
+## Tech Stack
+
+### Frontend
+- React.js
+- Tailwind CSS
+- React Router
+- Axios
+### Backend
+- FastAPI
+- SQLAlchemy
+- PostgreSQL
+- JWT Authentication
+
+## Deployment
+
+Frontend: https://fintrack-ai-1-aifa.onrender.com
+
+Backend: https://fintrack-ai-yaih.onrender.com
+
 ## Overview
 
 FinTrack AI is a modern web-based personal finance management application designed to help users track expenses, manage budgets, and gain meaningful insights into their spending habits.
